@@ -1,0 +1,37 @@
+name: Build and test
+
+on:
+  workflow_call: {}
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: cachix/install-nix-action@v31
+      with:
+        nix_path: nixpkgs=channel:nixos-25.05
+
+    - uses: nicknovitski/nix-develop@v1
+
+    - name: Compile
+      run: |
+        cmake -B build/ -DWITH_TESTS=ON
+        cmake --build build/
+
+    - name: SAST
+      run: |
+        cppcheck \
+          --enable=all \
+          --check-level=exhaustive \
+          --suppress=missingIncludeSystem \
+          --suppress=checkersReport \
+          --project=build/compile_commands.json
+
+    - name: Test
+      run: |
+        ctest --test-dir build/ --output-on-failure
