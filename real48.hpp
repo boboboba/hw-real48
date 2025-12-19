@@ -1,11 +1,15 @@
+#include <cstdint>
+#include <cstring>
+
 namespace math
 {
 
 class Real48
 {
+    char data[6];
 public:
     // constructors
-    constexpr Real48(); // TODO: add definition
+    constexpr Real48(): data{} {};
     Real48(const float number);
     Real48(const double number);
     constexpr Real48(const Real48& o) = default;
@@ -42,12 +46,22 @@ public:
     Class Classify() const noexcept;
 
     // limits
-    consteval static Real48 min();     // TODO: add definition
-    consteval static Real48 max();     // TODO: add definition
-    consteval static Real48 epsilon(); // TODO: add definition
+    consteval static Real48 min(){
+        math::Real48 temp{};
+        temp.data[5] = 1;
+        return temp;
+    }
+    consteval static Real48 max(){
+        math::Real48 temp{};
+        constexpr uint64_t bits = ~(~0ULL << 48);
+        std::memcpy(&temp, &bits, 6);
+        return temp;
+    }
+    consteval static Real48 epsilon(){
+        return math::Real48(1.0 / (1ULL << 39));
+    }
 
 private:
-    // TODO: add members
 };
 
 } // namespace math
