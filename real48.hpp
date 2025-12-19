@@ -58,7 +58,10 @@ public:
         return temp;
     }
     consteval static Real48 epsilon(){
-        return math::Real48(1.0 / (1ULL << 39));
+        math::Real48 temp{};
+        temp.data[4] = 0b01010010;
+        temp.data[5] = -1;
+        return temp;
     }
 
 private:
