@@ -46,22 +46,29 @@ public:
     Class Classify() const noexcept;
 
     // limits
-    consteval static Real48 min(){
-        math::Real48 temp{};
-        temp.data[5] = 1;
-        return temp;
+    consteval static Real48 min()
+    {
+        Real48 t{};
+        t.data[5] = 0x01;
+        return t;
     }
-    consteval static Real48 max(){
-        math::Real48 temp{};
-        constexpr uint64_t bits = ~(~0ULL << 48);
-        std::memcpy(&temp, &bits, 6);
-        return temp;
+    consteval static Real48 max()
+    {
+        Real48 t{};
+        t.data[0] = 0xFF;
+        t.data[1] = 0xFF;
+        t.data[2] = 0xFF;
+        t.data[3] = 0xFF;
+        t.data[4] = 0x7F;
+        t.data[5] = 0xFF;
+        return t;
     }
-    consteval static Real48 epsilon(){
-        math::Real48 temp{};
-        temp.data[4] = 0b01010010;
-        temp.data[5] = -1;
-        return temp;
+    consteval static Real48 epsilon()
+    {
+        Real48 t{};
+        t.data[0] = 0x01;
+        t.data[5] = 0x81;
+        return t;
     }
 
 private:
