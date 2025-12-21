@@ -1,5 +1,5 @@
+#pragma once
 #include <cstdint>
-#include <cstring>
 
 namespace math
 {
@@ -49,7 +49,7 @@ public:
     consteval static Real48 min()
     {
         Real48 t{};
-        t.data[5] = 0x01;
+        t.data[0] = 1;
         return t;
     }
     consteval static Real48 max()
@@ -59,19 +59,19 @@ public:
         t.data[1] = 0xFF;
         t.data[2] = 0xFF;
         t.data[3] = 0xFF;
-        t.data[4] = 0x7F;
-        t.data[5] = 0xFF;
+        t.data[4] = 0xFF;
+        t.data[5] = (1<<7) - 1;
         return t;
     }
     consteval static Real48 epsilon()
     {
         Real48 t{};
-        t.data[0] = 0x01;
-        t.data[5] = 0x81;
+        t.data[0] = 90;
         return t;
     }
 
 private:
+    static void validate_range(uint64_t real48exp);
 };
 
 } // namespace math
